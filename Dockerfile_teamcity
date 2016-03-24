@@ -1,0 +1,28 @@
+FROM centos:centos7
+
+RUN yum -y install wget
+RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u77-b03/jre-8u77-linux-x64.rpm
+RUN echo "5559c78c9d8c0bdbfb89d49aa502b56e jre-8u77-linux-x64.rpm" >> MD5SUM
+RUN md5sum -c MD5SUM
+RUN rpm -Uvh jre-8u77-linux-x64.rpm
+RUN rm -f jre-8u51-linux-x64.rpm
+RUN rm -f MD5SUM
+
+VOLUME ["/var/lib/teamcity"]
+
+ENV TEAMCITY_VERSION 9.1.6
+ENV TEAMCITY_SERVER_MEM_OPTS -Xmx750m -XX:MaxPermSize270m
+ENV TEAMCITY_DATA_PATH /var/lib/teamcity
+
+RUN wget http://download.jetbrains.com/teamcity/TeamCity-$TEAMCITY_VERSION.tar.gz 
+RUN echo "cc95d840798d948b764f0a65962648644d086c7426d5271c32d7b309c8905f9d	*TeamCity-$TEAMCITY_VERSION.tar.gz" >> SHA256SUM 
+RUN sha256sum -c SHA256SUM 
+RUN rm -f SHA256SUM 
+RUN tar -xvzf TeamCity-$TEAMCITY_VERSION.tar.gz 
+RUN rm -f TeamCity-$TEAMCITY_VERSION.tar.gz 
+
+RUN yum -y remove wget
+
+EXPOSE 8111
+
+CMD TeamCity/bin/teamcity-server.sh run
