@@ -5,7 +5,7 @@ RUN wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=acc
 RUN echo "5559c78c9d8c0bdbfb89d49aa502b56e jre-8u77-linux-x64.rpm" >> MD5SUM
 RUN md5sum -c MD5SUM
 RUN rpm -Uvh jre-8u77-linux-x64.rpm
-RUN rm -f jre-8u51-linux-x64.rpm
+RUN rm -f jre-8u77-linux-x64.rpm
 RUN rm -f MD5SUM
 
 VOLUME ["/var/lib/teamcity"]
